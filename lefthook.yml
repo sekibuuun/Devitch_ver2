@@ -2,23 +2,9 @@ pre-commit:
   parallel: true
   commands:
     biome:
-      check:
-        root: 'frontend/'
-        glob: "**/*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc}"
-        run: bunx biome check --apply --no-errors-on-unmatched --files-ignore-unknown=true {staged_files} && git update-index --again
-    gofmt:
-      root: 'backend/'
-      glob: '**/*.go'
-      run: go fmt {staged_files}
-
-pre-push:
-  parallel: true
-  commands:
-    biome:
-      check:
-        root: 'frontend/'
-        glob: "**/*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc}"
-        run: bunx biome check --apply --no-errors-on-unmatched --files-ignore-unknown=true {staged_files} && git update-index --again
+      root: 'frontend/'
+      glob: "**/*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc}"
+      run: bunx biome check --apply --no-errors-on-unmatched --files-ignore-unknown=true {staged_files} && git update-index --again
     gofmt:
       root: 'backend/'
       glob: '**/*.go'
