@@ -1,0 +1,19 @@
+{
+  "name": "Remix Go MySQL Dev",
+  "dockerComposeFile": "../docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/app",
+  "customizations": {
+      "vscode": {
+          "extensions": [
+              "dbaeumer.vscode-eslint",
+              "golang.go",
+              "ms-azuretools.vscode-docker"
+          ],
+          "settings": {
+              "terminal.integrated.shell.linux": "/bin/bash"
+          }
+      }
+  },
+  "postCreateCommand": "git config --global user.email 'you@example.com' && git config --global user.name 'Your Name'"
+}

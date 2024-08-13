@@ -1,0 +1,29 @@
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"  # Remix
+      - "8080:8080"  # Go
+    volumes:
+      - .:/app
+      - /app/frontend/node_modules
+    command: /bin/sh -c "cd frontend && bun run dev & cd backend && go run main.go"
+    depends_on:
+      - db
+    environment:
+      - NODE_ENV=development
+
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: myapp
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:

@@ -1,0 +1,26 @@
+node_modules
+.cache
+build
+public/build
+.env
+
+# Go specific
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+go.work
+
+# IDE specific
+.vscode/*
+!.vscode/extensions.json
+.idea
+*.swp
+*.swo
+
+# OS specific
+.DS_Store
+Thumbs.db
