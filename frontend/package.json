@@ -10,7 +10,7 @@
 		"typecheck": "tsc",
 		"lint": "biome lint --write ./app",
 		"format": "biome format --write ./app",
-		"check": "biome check --apply ./app"
+		"check": "biome check --write ./app"
 	},
 	"dependencies": {
 		"@remix-run/node": "^2.11.1",
