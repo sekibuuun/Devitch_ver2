@@ -10,6 +10,11 @@ RUN apt-get update && apt-get install -y golang-go
 # Install git
 RUN apt-get install -y git
 
+# Set Go environment variables
+ENV GOROOT /usr/lib/go
+ENV GOPATH /go
+ENV PATH $GOPATH/bin:$GOROOT/bin:$PATH
+
 # Set working directory
 WORKDIR /app
 
@@ -23,4 +28,7 @@ COPY backend ./backend
 # Expose ports
 EXPOSE 3000 8080 3306
 
-# Start command will be specified in docker-compose.yml
+RUN cd backend && go install github.com/air-verse/air@latest
+
+# Start air
+CMD ["air", "-c", "/backend/.air.toml"]
