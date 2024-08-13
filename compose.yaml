@@ -7,7 +7,7 @@ services:
     volumes:
       - .:/app
       - /app/frontend/node_modules
-    command: /bin/sh -c "cd frontend && bun run dev & cd backend && go run main.go"
+    command: /bin/sh -c "cd frontend && bun run dev & cd backend && air"
     depends_on:
       - db
     environment:

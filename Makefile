@@ -1,7 +1,7 @@
 .PHONY: build up down logs shell db
 
 build:
-	docker-compose build
+	docker-compose build --no-cache
 
 up:
 	docker-compose up -d

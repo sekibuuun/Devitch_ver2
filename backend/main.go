@@ -1,27 +1,17 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
-	"time"
+
+	"github.com/sekibuuun/Devitch_ver2/backend/api"
 )
 
 func main() {
-    http.HandleFunc("/", handleRoot)
-    http.HandleFunc("/time", handleTime)
+	// ルーターの初期化
+	r := api.NewRouter()
 
-    fmt.Println("Server is starting on :8080...")
-    if err := http.ListenAndServe(":8080", nil); err != nil {
-        log.Fatal(err)
-    }
-}
-
-func handleRoot(w http.ResponseWriter, r *http.Request) {
-    fmt.Fprintf(w, "Welcome to the Go HTTP server!")
-}
-
-func handleTime(w http.ResponseWriter, r *http.Request) {
-    currentTime := time.Now().Format(time.RFC3339)
-    fmt.Fprintf(w, "The current time is: %s", currentTime)
+	// サーバーの起動
+	log.Println("Server starting on port 8080")
+	log.Fatal(http.ListenAndServe(":8080", r))
 }
