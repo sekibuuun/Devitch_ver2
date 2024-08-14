@@ -198,10 +198,10 @@ paths:
                 example:
                   - streamid: 1
                     title: "stream1"
-                    genre: ["genre1", "genre2"]
+                    genreid: [1, 2]
                   - streamid: 2
                     title: "stream2"
-                    genre: ["genre1", "genre2"]
+                    genreid: [1, 2]
     post:
       tags:
         - 配信関連
@@ -218,7 +218,7 @@ paths:
             example:
               streamid: 1
               title: "stream1"
-              genre: ["genre1", "genre2"]
+              genreid: [1, 2]
       responses:
         "200":
           description: A JSON object of Stream model
@@ -229,8 +229,8 @@ paths:
               example:
                 streamid: 1
                 title: "stream1"
-                genre: ["genre1", "genre2"]
-                comments: []
+                genreid: [1, 2]
+                comments: [{}]
                 listeners: [{}]
   /streams/{streamid}:
     get:
@@ -256,7 +256,7 @@ paths:
               example:
                 streamid: 1
                 title: "stream1"
-                genre: ["genre1", "genre2"]
+                genreid: [1, 2]
                 comments: []
                 listeners: [{}]
     patch:
@@ -282,7 +282,7 @@ paths:
               $ref: "#/components/schemas/Stream"
             example:
               title: "stream1"
-              genre: ["genre1", "genre2"]
+              genreid: [1, 2]      
       responses:
         "200":
           description: A JSON object of Stream model
@@ -293,7 +293,7 @@ paths:
               example:
                 streamid: 1
                 title: "stream2"
-                genre: ["genre3"]
+                genreid: [3]
     delete:
       tags:
         - 配信関連
@@ -339,7 +339,7 @@ components:
           type: array
           items:
             type: string
-        followers: #本当はUserの配列を入れたいが、循環参照になってしまう
+        followers:
           type: array
           items:
             type: integer
@@ -355,7 +355,7 @@ components:
           format: int64
         title:
           type: string
-        genre:
+        genreid:
           type: array
           items:
             type: integer
@@ -376,6 +376,18 @@ components:
         listeners:
           type: array
           items:
-            $ref: "#/components/schemas/User"
+            type: integer
+            format: int64
         listenerLength:
           type: integer
+    Genre:
+      type: object
+      required:
+        - genreid
+        - genrename
+      properties:
+        genreid:
+          type: integer
+          format: int64
+        genrename:
+          type: string
