@@ -9,6 +9,9 @@ up:
 down:
 	docker-compose down
 
+stop:
+	docker-compose stop
+
 logs:
 	docker-compose logs -f
 
@@ -16,4 +19,4 @@ shell:
 	docker-compose exec app /bin/bash
 
 db:
-	docker-compose exec db mysql -uroot -prootpassword myapp
+	docker-compose exec db /bin/bash
