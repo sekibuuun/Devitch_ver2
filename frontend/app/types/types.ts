@@ -1,4 +1,4 @@
-export type Hellos = {
-  id: number
-  content: string
-}
+export type Hello = {
+	id: number;
+	content: string;
+};
