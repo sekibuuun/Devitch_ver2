@@ -9,7 +9,7 @@ export const loader = async () => {
 	return json({ genreData });
 };
 
-const Hello: React.FC = () => {
+const GenreComponent: React.FC = () => {
 	const { genreData } = useLoaderData<typeof loader>();
 	return (
 		<div>
@@ -22,4 +22,4 @@ const Hello: React.FC = () => {
 	);
 };
 
-export default Hello;
+export default GenreComponent;
