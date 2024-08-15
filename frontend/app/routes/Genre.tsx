@@ -3,10 +3,17 @@ import type React from "react";
 import type { Genre } from "~/types/types";
 
 export const loader = async () => {
-	const response = await fetch("http://localhost:8080/genres");
-	const genreData: Genre[] = await response.json();
-
-	return json({ genreData });
+	try {
+		const response = await fetch("http://localhost:8080/genres");
+		if (!response.ok) {
+			throw new Error(`HTTP error! status: ${response.status}`);
+		}
+		const genreData: Genre[] = await response.json();
+		return json({ genreData });
+	} catch (error) {
+		console.error("Failed to fetch genres:", error);
+		return json({ genreData: [] }, { status: 500 });
+	}
 };
 
 const GenreComponent: React.FC = () => {
