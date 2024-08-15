@@ -40,18 +40,22 @@ func GenresHandler(w http.ResponseWriter, r *http.Request) {
 	CORS(w)
 	genres, err := services.GetGenreService()
 	if err != nil {
-		log.Fatal(err)
+		log.Println("Error retrieving genres:", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
 	}
 
 	var buf bytes.Buffer
 	enc := json.NewEncoder(&buf)
 	if err := enc.Encode(&genres); err != nil {
-		log.Fatal(err)
+		log.Println("Error encoding JSON:", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
 	}
 	fmt.Println(buf.String())
 
 	_, err = fmt.Fprint(w, buf.String())
 	if err != nil {
-		return
+		log.Println("Error writing response:", err)
 	}
 }

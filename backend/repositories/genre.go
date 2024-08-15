@@ -21,5 +21,10 @@ func SelectGenreList(db *sql.DB) ([]models.Genres, error) {
 		}
 		genres = append(genres, genre)
 	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
 	return genres, nil
 }
