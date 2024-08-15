@@ -4,6 +4,6 @@ export type Hello = {
 };
 
 export type Genre = {
-	id: number;
+	genre_id: number;
 	genre: string;
 };

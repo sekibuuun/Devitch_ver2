@@ -22,7 +22,7 @@ const GenreComponent: React.FC = () => {
 		<div>
 			<ul>
 				{genreData.map((genre) => (
-					<li key={genre.id}>{genre.genre}</li>
+					<li key={genre.genre_id}>{genre.genre}</li>
 				))}
 			</ul>
 		</div>
