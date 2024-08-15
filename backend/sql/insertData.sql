@@ -1,0 +1,10 @@
+insert into Genres (genre) values ('Python');
+insert into Genres (genre) values ('JavaScript');
+insert into Genres (genre) values ('Java');
+insert into Genres (genre) values ('C++');
+insert into Genres (genre) values ('C#');
+insert into Genres (genre) values ('PHP');
+insert into Genres (genre) values ('TypeScript');
+insert into Genres (genre) values ('Swift');
+insert into Genres (genre) values ('Go');
+insert into Genres (genre) values ('Rust');

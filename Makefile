@@ -1,4 +1,4 @@
-.PHONY: build up down logs shell db
+.PHONY: build up down logs shell mysql
 
 build:
 	docker-compose build --no-cache
@@ -9,11 +9,14 @@ up:
 down:
 	docker-compose down
 
+stop:
+	docker-compose stop
+
 logs:
 	docker-compose logs -f
 
 shell:
 	docker-compose exec app /bin/bash
 
-db:
-	docker-compose exec db mysql -uroot -prootpassword myapp
+mysql:
+	docker-compose exec mysql /bin/bash
