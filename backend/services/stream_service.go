@@ -5,17 +5,17 @@ import (
 	"github.com/sekibuuun/Devitch_ver2/backend/repositories"
 )
 
-func GetGenreService() ([]models.Genre, error) {
+func PostStreamService(stream models.Stream) (models.Stream, error) {
 	db, err := connectDB()
 	if err != nil {
-		return nil, err
+		return models.Stream{}, err
 	}
 	defer db.Close()
 
-	genreList, err := repositories.SelectGenreList(db)
+	newStream, err := repositories.InsertStream(db, stream)
 	if err != nil {
-		return nil, err
+		return models.Stream{}, err
 	}
 
-	return genreList, nil
+	return newStream, nil
 }
