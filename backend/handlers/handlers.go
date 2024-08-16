@@ -81,7 +81,7 @@ func PostStreamHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for _, genreId := range streamRequest.GenreIds {
-		if genreId <= 0 {
+		if genreId <= 0 || genreId > 10 {
 			log.Println("Invalid genre_id:", genreId)
 			http.Error(w, "Bad Request: Invalid genre_id", http.StatusBadRequest)
 			return
