@@ -54,8 +54,54 @@ func GenresHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Println(buf.String())
 
+	w.Header().Set("Content-Type", "application/json")
+
 	_, err = fmt.Fprint(w, buf.String())
 	if err != nil {
 		log.Println("Error writing response:", err)
+	}
+}
+
+func PostStreamHandler(w http.ResponseWriter, r *http.Request) {
+	CORS(w)
+
+	var streamRequest models.StreamRequest
+
+	if err := json.NewDecoder(r.Body).Decode(&streamRequest); err != nil {
+		log.Println("Error decoding JSON:", err)
+		http.Error(w, "Bad Request", http.StatusBadRequest)
+		return
+	}
+
+	// genre_idsの検証
+	if len(streamRequest.GenreIds) == 0 {
+		log.Println("No genre_ids provided")
+		http.Error(w, "Bad Request: At least one genre_id is required", http.StatusBadRequest)
+		return
+	}
+
+	for _, genreId := range streamRequest.GenreIds {
+		if genreId <= 0 {
+			log.Println("Invalid genre_id:", genreId)
+			http.Error(w, "Bad Request: Invalid genre_id", http.StatusBadRequest)
+			return
+		}
+	}
+
+	stream := models.Stream{
+		Title:    streamRequest.Title,
+		GenreIds: streamRequest.GenreIds,
+	}
+
+	newStream, err := services.PostStreamService(stream)
+	if err != nil {
+		log.Println("Error posting stream:", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	if err := json.NewEncoder(w).Encode(newStream); err != nil {
+		log.Println("Error encoding JSON response:", err)
 	}
 }
