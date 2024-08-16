@@ -19,11 +19,14 @@ func InsertStream(db *sql.DB, stream models.Stream) (models.Stream, error) {
 
 	stream_id, _ := result.LastInsertId()
 
-	if err := InsertStreamGenre(db, int(stream_id), stream.GenreIds); err != nil {
+	genre_ids, err := InsertStreamGenre(db, int(stream_id), stream.GenreIds)
+
+	if err != nil {
 		return models.Stream{}, err
 	}
 
 	newStream.StreamId = int(stream_id)
+	newStream.GenreIds = genre_ids
 
 	return newStream, nil
 }
