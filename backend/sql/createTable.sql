@@ -1,28 +1,41 @@
-CREATE TABLE IF NOT EXISTS Streams (
-  stream_id INTEGER UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  title VARCHAR(100) NOT NULL,
-  comments TEXT,
-  comments_length INTEGER,
-  listeners INTEGER,
-  listeners_length INTEGER,
-  FOREIGN KEY (listeners) REFERENCES Users(user_id)
+CREATE TABLE IF NOT EXISTS User (
+  user_id INTEGER UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  username VARCHAR(100) NOT NULL,
+  links JSON
 );
 
-CREATE TABLE IF NOT EXISTS Genres (
+CREATE TABLE IF NOT EXISTS Stream (
+  stream_id INTEGER UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  title VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Comment (
+  comment_id INTEGER UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  stream_id INTEGER UNSIGNED NOT NULL,
+  user_id INTEGER UNSIGNED NOT NULL,
+  content TEXT NOT NULL,
+  send_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (stream_id) REFERENCES Stream(stream_id),
+  FOREIGN KEY (user_id) REFERENCES User(user_id)
+);
+
+CREATE TABLE IF NOT EXISTS Listener (
+  stream_id INTEGER UNSIGNED NOT NULL,
+  user_id INTEGER UNSIGNED NOT NULL,
+  PRIMARY KEY (stream_id, user_id),
+  FOREIGN KEY (stream_id) REFERENCES Stream(stream_id),
+  FOREIGN KEY (user_id) REFERENCES User(user_id)
+);
+
+CREATE TABLE IF NOT EXISTS Genre (
   genre_id INTEGER UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   genre VARCHAR(100) NOT NULL UNIQUE
 );
 
-CREATE TABLE IF NOT EXISTS Stream_Genres (
+CREATE TABLE IF NOT EXISTS StreamGenre (
   stream_id INTEGER UNSIGNED,
   genre_id INTEGER UNSIGNED,
   PRIMARY KEY (stream_id, genre_id),
-  FOREIGN KEY (stream_id) REFERENCES Streams(stream_id),
-  FOREIGN KEY (genre_id) REFERENCES Genres(genre_id)
-);
-
-CREATE TABLE IF NOT EXISTS Users (
-  user_id INTEGER UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  username VARCHAR(100) NOT NULL,
-  links JSON
+  FOREIGN KEY (stream_id) REFERENCES Stream(stream_id),
+  FOREIGN KEY (genre_id) REFERENCES Genre(genre_id)
 );
