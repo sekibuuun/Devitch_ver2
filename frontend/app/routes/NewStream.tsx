@@ -1,6 +1,9 @@
 import type { ActionFunctionArgs } from "@remix-run/node"; // or cloudflare/deno
 import { redirect } from "@remix-run/node"; // or cloudflare/deno
 import { Form } from "@remix-run/react";
+import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
+import { Label } from "~/components/ui/label";
 
 const genres = [
 	{ id: 1, name: "Python" },
@@ -46,18 +49,32 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export default function NewStream() {
 	return (
-		<div>
+		<div className="p-4">
 			<Form method="post">
-				<input type="text" name="title" />
-				<div>
-					{genres.map((genre) => (
-						<label key={genre.id}>
-							<input type="checkbox" name="genre_ids" value={genre.id} />
-							{genre.name}
-						</label>
-					))}
+				<div className="grid w-full max-w-sm items-center gap-1.5">
+					<Label htmlFor="title">配信タイトル</Label>
+					<Input
+						type="text"
+						name="title"
+						id="title"
+						placeholder="配信タイトルを入力してください"
+					/>
 				</div>
-				<button type="submit">Start Stream</button>
+				{genres.map((genre) => (
+					<label
+						key={genre.id}
+						className="inline-flex items-center px-3 py-1 rounded-full text-sm cursor-pointer transition-colors duration-200 bg-sky-400 text-white"
+					>
+						<input
+							type="checkbox"
+							name="genre_ids"
+							value={genre.id}
+							className="mr-2 hidden"
+						/>
+						{genre.name}
+					</label>
+				))}
+				<Button type="submit">Start Stream</Button>
 			</Form>
 		</div>
 	);
