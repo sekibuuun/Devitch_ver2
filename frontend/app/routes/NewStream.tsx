@@ -37,7 +37,9 @@ export async function action({ request }: ActionFunctionArgs) {
 	});
 
 	if (!response.ok) {
-		throw new Error(`HTTP error! status: ${response.status}`);
+		return new Response(`Error creating stream: ${response.statusText}`, {
+			status: response.status,
+		});
 	}
 	return redirect("/hello");
 }
