@@ -1,5 +1,4 @@
 import { json, useLoaderData } from "@remix-run/react";
-import type React from "react";
 import type { Genre } from "~/types/types";
 
 export const loader = async () => {
@@ -16,7 +15,7 @@ export const loader = async () => {
 	}
 };
 
-const GenreComponent: React.FC = () => {
+function GenreComponent() {
 	const { genreData } = useLoaderData<typeof loader>();
 	return (
 		<div>
@@ -27,6 +26,6 @@ const GenreComponent: React.FC = () => {
 			</ul>
 		</div>
 	);
-};
+}
 
 export default GenreComponent;
