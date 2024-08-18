@@ -1,6 +1,6 @@
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import { Form, useNavigation } from "@remix-run/react";
+import { Form, useActionData, useNavigation } from "@remix-run/react";
 import { useState } from "react";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
@@ -57,6 +57,7 @@ export async function action({ request }: ActionFunctionArgs) {
 export default function NewStream() {
 	const [selectedGenres, setSelectedGenres] = useState<number[]>([]);
 	const navigation = useNavigation();
+	const error = useActionData<typeof action>();
 
 	const handleGenreToggle = (genreId: number) => {
 		setSelectedGenres((prev) =>
@@ -102,6 +103,7 @@ export default function NewStream() {
 						);
 					})}
 				</div>
+				{error && <p className="text-red-500 py-2">{error.error}</p>}
 				<Button type="submit" disabled={navigation.state === "submitting"}>
 					{navigation.state === "submitting" ? "送信中..." : "配信開始"}
 				</Button>
