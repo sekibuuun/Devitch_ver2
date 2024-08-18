@@ -1,6 +1,7 @@
-import type { ActionFunctionArgs } from "@remix-run/node"; // or cloudflare/deno
-import { redirect } from "@remix-run/node"; // or cloudflare/deno
-import { Form } from "@remix-run/react";
+import type { ActionFunctionArgs } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
+import { Form, useNavigation } from "@remix-run/react";
+import { useState } from "react";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
@@ -26,9 +27,14 @@ export async function action({ request }: ActionFunctionArgs) {
 		.map((id) => Number.parseInt(id as string, 10));
 
 	if (!title) {
-		return new Response("Title is required", {
-			status: 400,
-		});
+		return json({ error: "タイトルは必須です" }, { status: 400 });
+	}
+
+	if (genreIds.length === 0) {
+		return json(
+			{ error: "ジャンルは1つ以上選択してください" },
+			{ status: 400 },
+		);
 	}
 
 	const response = await fetch("http://localhost:8080/streams", {
@@ -40,18 +46,30 @@ export async function action({ request }: ActionFunctionArgs) {
 	});
 
 	if (!response.ok) {
-		return new Response(`Error creating stream: ${response.statusText}`, {
-			status: response.status,
-		});
+		return json(
+			{ error: `配信の作成に失敗しました: ${response.statusText}` },
+			{ status: response.status },
+		);
 	}
 	return redirect("/hello");
 }
 
 export default function NewStream() {
+	const [selectedGenres, setSelectedGenres] = useState<number[]>([]);
+	const navigation = useNavigation();
+
+	const handleGenreToggle = (genreId: number) => {
+		setSelectedGenres((prev) =>
+			prev.includes(genreId)
+				? prev.filter((id) => id !== genreId)
+				: [...prev, genreId],
+		);
+	};
+
 	return (
 		<div className="p-4">
 			<Form method="post">
-				<div className="grid w-full max-w-sm items-center gap-1.5">
+				<div className="grid w-full max-w-sm items-center gap-1.5 mb-4">
 					<Label htmlFor="title">配信タイトル</Label>
 					<Input
 						type="text"
@@ -60,21 +78,33 @@ export default function NewStream() {
 						placeholder="配信タイトルを入力してください"
 					/>
 				</div>
-				{genres.map((genre) => (
-					<label
-						key={genre.id}
-						className="inline-flex items-center px-3 py-1 rounded-full text-sm cursor-pointer transition-colors duration-200 bg-sky-400 text-white"
-					>
-						<input
-							type="checkbox"
-							name="genre_ids"
-							value={genre.id}
-							className="mr-2 hidden"
-						/>
-						{genre.name}
-					</label>
-				))}
-				<Button type="submit">Start Stream</Button>
+				<div className="flex flex-wrap gap-2 mb-4">
+					<p>ジャンル</p>
+					{genres.map((genre) => {
+						const isSelected = selectedGenres.includes(genre.id);
+						return (
+							<label
+								key={genre.id}
+								className={`inline-flex items-center px-3 py-1 rounded-full text-sm cursor-pointer transition-colors duration-200 ${
+									isSelected ? "bg-sky-800 text-white" : "bg-sky-400 text-white"
+								}`}
+							>
+								<input
+									type="checkbox"
+									name="genre_ids"
+									value={genre.id}
+									className="mr-2 hidden"
+									checked={isSelected}
+									onChange={() => handleGenreToggle(genre.id)}
+								/>
+								{genre.name}
+							</label>
+						);
+					})}
+				</div>
+				<Button type="submit" disabled={navigation.state === "submitting"}>
+					{navigation.state === "submitting" ? "送信中..." : "配信開始"}
+				</Button>
 			</Form>
 		</div>
 	);
