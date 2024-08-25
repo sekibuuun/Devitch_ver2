@@ -15,14 +15,7 @@ var hellos = []models.Hello{
 	{ID: 1, Content: "Hello!"},
 }
 
-func CORS(w http.ResponseWriter) {
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
-}
-
 func HelloHandler(w http.ResponseWriter, r *http.Request) {
-	CORS(w)
 	var buf bytes.Buffer
 	enc := json.NewEncoder(&buf)
 	if err := enc.Encode(&hellos); err != nil {
@@ -37,7 +30,6 @@ func HelloHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func GenresHandler(w http.ResponseWriter, r *http.Request) {
-	CORS(w)
 	genres, err := services.GetGenreService()
 	if err != nil {
 		log.Println("Error retrieving genres:", err)
@@ -54,8 +46,6 @@ func GenresHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Println(buf.String())
 
-	w.Header().Set("Content-Type", "application/json")
-
 	_, err = fmt.Fprint(w, buf.String())
 	if err != nil {
 		log.Println("Error writing response:", err)
@@ -63,8 +53,6 @@ func GenresHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func PostStreamHandler(w http.ResponseWriter, r *http.Request) {
-	CORS(w)
-
 	var streamRequest models.StreamRequest
 
 	if err := json.NewDecoder(r.Body).Decode(&streamRequest); err != nil {
@@ -100,7 +88,6 @@ func PostStreamHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
 	if err := json.NewEncoder(w).Encode(newStream); err != nil {
 		log.Println("Error encoding JSON response:", err)
 	}
