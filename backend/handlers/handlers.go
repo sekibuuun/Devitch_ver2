@@ -32,7 +32,7 @@ func HelloHandler(w http.ResponseWriter, r *http.Request) {
 func GenresHandler(w http.ResponseWriter, r *http.Request) {
 	genres, err := services.GetGenreService()
 	if err != nil {
-		log.Println("Error retrieving genres:", err)
+		log.Println("Could not get genres")
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -40,7 +40,7 @@ func GenresHandler(w http.ResponseWriter, r *http.Request) {
 	var buf bytes.Buffer
 	enc := json.NewEncoder(&buf)
 	if err := enc.Encode(&genres); err != nil {
-		log.Println("Error encoding JSON:", err)
+		log.Println("Could not encode genres to JSON")
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -56,7 +56,7 @@ func PostStreamHandler(w http.ResponseWriter, r *http.Request) {
 	var streamRequest models.StreamRequest
 
 	if err := json.NewDecoder(r.Body).Decode(&streamRequest); err != nil {
-		log.Println("Error decoding JSON:", err)
+		log.Println("Could not decode request body to Go struct")
 		http.Error(w, "Bad Request", http.StatusBadRequest)
 		return
 	}
@@ -83,12 +83,12 @@ func PostStreamHandler(w http.ResponseWriter, r *http.Request) {
 
 	newStream, err := services.PostStreamService(stream)
 	if err != nil {
-		log.Println("Error posting stream:", err)
+		log.Println("Could not post stream")
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 
 	if err := json.NewEncoder(w).Encode(newStream); err != nil {
-		log.Println("Error encoding JSON response:", err)
+		log.Println("Could not encode stream to JSON")
 	}
 }
