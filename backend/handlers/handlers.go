@@ -11,6 +11,12 @@ import (
 	"github.com/sekibuuun/Devitch_ver2/backend/services"
 )
 
+const (
+	NoID       = iota
+	MinGenreID = iota + 1
+	MaxGenreID = iota + 10
+)
+
 var hellos = []models.Hello{
 	{ID: 1, Content: "Hello!"},
 }
@@ -69,7 +75,7 @@ func PostStreamHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for _, genreId := range streamRequest.GenreIds {
-		if genreId <= 0 || genreId > 10 {
+		if genreId <= NoID || genreId > MaxGenreID {
 			log.Println("Invalid genre_id:", genreId)
 			http.Error(w, "Bad Request: Invalid genre_id", http.StatusBadRequest)
 			return
