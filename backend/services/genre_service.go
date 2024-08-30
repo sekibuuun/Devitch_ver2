@@ -5,14 +5,8 @@ import (
 	"github.com/sekibuuun/Devitch_ver2/backend/repositories"
 )
 
-func GetGenreService() ([]models.Genre, error) {
-	db, err := connectDB()
-	if err != nil {
-		return nil, err
-	}
-	defer db.Close()
-
-	genreList, err := repositories.SelectGenreList(db)
+func (s *MyAppService) GetGenreService() ([]models.Genre, error) {
+	genreList, err := repositories.SelectGenreList(s.db)
 	if err != nil {
 		return nil, err
 	}
