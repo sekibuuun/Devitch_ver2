@@ -7,7 +7,7 @@ import (
 )
 
 func SelectGenreList(db *sql.DB) ([]models.Genre, error) {
-	rows, err := db.Query("SELECT * FROM Genres")
+	rows, err := db.Query("SELECT * FROM Genre")
 	if err != nil {
 		return nil, err
 	}
@@ -30,7 +30,7 @@ func SelectGenreList(db *sql.DB) ([]models.Genre, error) {
 }
 
 func SelectGenre(db *sql.DB, genreId int) (models.Genre, error) {
-	const query = `SELECT * FROM Genres WHERE genre_id = ?`
+	const query = `SELECT * FROM Genre WHERE genre_id = ?`
 	row := db.QueryRow(query, genreId)
 	if err := row.Err(); err != nil {
 		return models.Genre{}, err
