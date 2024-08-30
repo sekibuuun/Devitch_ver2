@@ -1,23 +1,30 @@
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import { Form, useActionData, useNavigation } from "@remix-run/react";
+import {
+	Form,
+	useActionData,
+	useLoaderData,
+	useNavigation,
+} from "@remix-run/react";
 import { useState } from "react";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
+import type { Genre } from "~/types/types";
 
-const genres = [
-	{ id: 1, name: "Python" },
-	{ id: 2, name: "JavaScript" },
-	{ id: 3, name: "Java" },
-	{ id: 4, name: "C++" },
-	{ id: 5, name: "C#" },
-	{ id: 6, name: "PHP" },
-	{ id: 7, name: "TypeScript" },
-	{ id: 8, name: "Swift" },
-	{ id: 9, name: "Go" },
-	{ id: 10, name: "Rust" },
-];
+export const loader = async () => {
+	try {
+		const response = await fetch("http://localhost:8080/genres");
+		if (!response.ok) {
+			throw new Error(`HTTP error! status: ${response.status}`);
+		}
+		const genreData: Genre[] = await response.json();
+		return json({ genreData });
+	} catch (error) {
+		console.error("Failed to fetch genres:", error);
+		return json({ genreData: [] }, { status: 500 });
+	}
+};
 
 export async function action({ request }: ActionFunctionArgs) {
 	const body = await request.formData();
@@ -57,6 +64,7 @@ export async function action({ request }: ActionFunctionArgs) {
 export default function NewStream() {
 	const [selectedGenres, setSelectedGenres] = useState<number[]>([]);
 	const navigation = useNavigation();
+	const { genreData } = useLoaderData<typeof loader>();
 	const error = useActionData<typeof action>();
 
 	const handleGenreToggle = (genreId: number) => {
@@ -81,11 +89,11 @@ export default function NewStream() {
 				</div>
 				<div className="flex flex-wrap gap-2 mb-4">
 					<p>ジャンル</p>
-					{genres.map((genre) => {
-						const isSelected = selectedGenres.includes(genre.id);
+					{genreData.map((genre) => {
+						const isSelected = selectedGenres.includes(genre.genre_id);
 						return (
 							<label
-								key={genre.id}
+								key={genre.genre_id}
 								className={`inline-flex items-center px-3 py-1 rounded-full text-sm cursor-pointer transition-colors duration-200 ${
 									isSelected ? "bg-sky-800 text-white" : "bg-sky-400 text-white"
 								}`}
@@ -93,12 +101,12 @@ export default function NewStream() {
 								<input
 									type="checkbox"
 									name="genre_ids"
-									value={genre.id}
+									value={genre.genre_id}
 									className="mr-2 hidden"
 									checked={isSelected}
-									onChange={() => handleGenreToggle(genre.id)}
+									onChange={() => handleGenreToggle(genre.genre_id)}
 								/>
-								{genre.name}
+								{genre.genre}
 							</label>
 						);
 					})}
