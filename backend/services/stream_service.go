@@ -13,3 +13,13 @@ func (s *MyAppService) PostStreamService(stream models.Stream) (models.Stream, e
 
 	return newStream, nil
 }
+
+func (s *MyAppService) GetStreamService(streamID int) (models.Stream, error) {
+	stream, err := repositories.SelectStream(s.db, streamID)
+
+	if err != nil {
+		return models.Stream{}, err
+	}
+
+	return stream, nil
+}

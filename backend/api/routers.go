@@ -19,6 +19,7 @@ func NewRouter(db *sql.DB) *mux.Router {
 	r.HandleFunc("/hello", gCon.HelloHandler).Methods(http.MethodGet)
 	r.HandleFunc("/genres", gCon.GenresHandler).Methods(http.MethodGet)
 	r.HandleFunc("/streams", sCon.PostStreamHandler).Methods(http.MethodPost)
+	r.HandleFunc("/streams/{stream_id}", sCon.GetStreamHandler).Methods(http.MethodGet)
 
 	r.Use(middlewares.CORS)
 	r.Use(middlewares.JSON)

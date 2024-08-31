@@ -10,4 +10,5 @@ type GenreServicer interface {
 
 type StreamServicer interface {
 	PostStreamService(stream models.Stream) (models.Stream, error)
+	GetStreamService(streamID int) (models.Stream, error)
 }

@@ -4,7 +4,9 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"strconv"
 
+	"github.com/gorilla/mux"
 	"github.com/sekibuuun/Devitch_ver2/backend/controllers/services"
 	"github.com/sekibuuun/Devitch_ver2/backend/models"
 )
@@ -60,6 +62,31 @@ func (c *StreamController) PostStreamHandler(w http.ResponseWriter, r *http.Requ
 	}
 
 	if err := json.NewEncoder(w).Encode(newStream); err != nil {
+		log.Println("Could not encode stream to JSON")
+	}
+}
+
+func (c *StreamController) GetStreamHandler(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	stream_id, ok := vars["stream_id"]
+
+	if !ok {
+		log.Println("No stream_id provided")
+		http.Error(w, "Bad Request: stream_id is required", http.StatusBadRequest)
+		return
+	}
+
+	id, _ := strconv.Atoi(stream_id)
+
+	stream, err := c.service.GetStreamService(id)
+
+	if err != nil {
+		log.Println("Could not get stream")
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	if err := json.NewEncoder(w).Encode(stream); err != nil {
 		log.Println("Could not encode stream to JSON")
 	}
 }
