@@ -14,7 +14,7 @@ import type { Genre } from "~/types/types";
 
 export const loader = async () => {
 	try {
-		const response = await fetch("http://localhost:8080/genres");
+		const response = await fetch("http://backend:8080/genres");
 		if (!response.ok) {
 			throw new Error(`HTTP error! status: ${response.status}`);
 		}
@@ -44,7 +44,7 @@ export async function action({ request }: ActionFunctionArgs) {
 		);
 	}
 
-	const response = await fetch("http://localhost:8080/streams", {
+	const response = await fetch("http://backend:8080/streams", {
 		method: "POST",
 		headers: {
 			"Content-Type": "application/json",
@@ -58,7 +58,9 @@ export async function action({ request }: ActionFunctionArgs) {
 			{ status: response.status },
 		);
 	}
-	return redirect("/hello");
+
+	const streamId = (await response.json()).stream_id;
+	return redirect(`/streams/${streamId}`);
 }
 
 export default function NewStream() {

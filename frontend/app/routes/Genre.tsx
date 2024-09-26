@@ -3,7 +3,7 @@ import type { Genre } from "~/types/types";
 
 export const loader = async () => {
 	try {
-		const response = await fetch("http://localhost:8080/genres");
+		const response = await fetch("http://backend:8080/genres");
 		if (!response.ok) {
 			throw new Error(`HTTP error! status: ${response.status}`);
 		}
