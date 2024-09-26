@@ -18,5 +18,5 @@ logs:
 shell:
 	docker-compose exec app /bin/bash
 
-mysql:
-	docker-compose exec mysql /bin/bash
+db:
+	docker-compose exec db /bin/bash
