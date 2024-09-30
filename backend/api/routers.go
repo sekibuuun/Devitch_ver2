@@ -14,15 +14,16 @@ func NewRouter(db *sql.DB) *mux.Router {
 	ser := services.NewMyAppService(db)
 	gCon := controllers.NewGenreController(ser)
 	sCon := controllers.NewStreamController(ser)
+	hCon := controllers.NewHealthCheckController(ser)
 
 	r := mux.NewRouter()
-	r.HandleFunc("/hello", gCon.HelloHandler).Methods(http.MethodGet)
+	r.HandleFunc("/hello", hCon.HelloHandler).Methods(http.MethodGet)
 	r.HandleFunc("/genres", gCon.GenresHandler).Methods(http.MethodGet)
+	r.HandleFunc("/genres/{genre_id}", gCon.GetGenreHandler).Methods(http.MethodGet)
 	r.HandleFunc("/streams", sCon.PostStreamHandler).Methods(http.MethodPost)
 	r.HandleFunc("/streams/{stream_id}", sCon.GetStreamHandler).Methods(http.MethodGet)
 
-	r.Use(middlewares.CORS)
-	r.Use(middlewares.JSON)
+	r.Use(middlewares.PrepareResponse)
 
 	return r
 }
