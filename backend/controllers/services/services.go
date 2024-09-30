@@ -6,9 +6,14 @@ import (
 
 type GenreServicer interface {
 	GetGenreService() ([]models.Genre, error)
+	GetGenreByIDService(genreID int) (models.Genre, error)
 }
 
 type StreamServicer interface {
 	PostStreamService(stream models.Stream) (models.Stream, error)
 	GetStreamService(streamID int) (models.Stream, error)
+}
+
+type HealthCheckServicer interface {
+	GetHelloService() ([]models.Hello, error)
 }
