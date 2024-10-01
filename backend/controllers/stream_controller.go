@@ -20,9 +20,16 @@ func NewStreamController(s services.StreamServicer) *StreamController {
 }
 
 const (
-	NoID       = iota
-	MinGenreID = iota + 1
-	MaxGenreID = iota + 10
+	Python int = iota + 1
+	JavaScript
+	Java
+	Cplusplus
+	Csharp
+	PHP
+	TypeScript
+	Swift
+	Go
+	Rust
 )
 
 func (c *StreamController) PostStreamHandler(w http.ResponseWriter, r *http.Request) {
@@ -42,7 +49,10 @@ func (c *StreamController) PostStreamHandler(w http.ResponseWriter, r *http.Requ
 	}
 
 	for _, genreId := range streamRequest.GenreIds {
-		if genreId <= NoID || genreId > MaxGenreID {
+		switch genreId {
+		case Python, JavaScript, Java, Cplusplus, Csharp, PHP, TypeScript, Swift, Go, Rust:
+			continue
+		default:
 			log.Println("Invalid genre_id:", genreId)
 			http.Error(w, "Bad Request: Invalid genre_id", http.StatusBadRequest)
 			return
@@ -79,7 +89,6 @@ func (c *StreamController) GetStreamHandler(w http.ResponseWriter, r *http.Reque
 	id, _ := strconv.Atoi(stream_id)
 
 	stream, err := c.service.GetStreamService(id)
-
 	if err != nil {
 		log.Println("Could not get stream")
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
