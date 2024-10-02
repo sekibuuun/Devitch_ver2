@@ -13,3 +13,11 @@ func (s *MyAppService) GetGenreService() ([]models.Genre, error) {
 
 	return genreList, nil
 }
+
+func (s *MyAppService) GetGenreByIDService(genreID int) (models.Genre, error) {
+	genre, err := repositories.SelectGenre(s.db, genreID)
+	if err != nil {
+		return models.Genre{}, err
+	}
+	return genre, nil
+}
