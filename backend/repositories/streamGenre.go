@@ -1,11 +1,10 @@
 package repositories
 
 import (
-	"database/sql"
 	"strings"
 )
 
-func InsertStreamGenre(db *sql.DB, stream_id int, genre_ids []int) ([]int, error) {
+func (r *MyAppRepository) InsertStreamGenre(stream_id int, genre_ids []int) ([]int, error) {
 	const query = `INSERT INTO StreamGenre (stream_id, genre_id) VALUES `
 
 	placeholders := make([]string, len(genre_ids))
@@ -18,7 +17,7 @@ func InsertStreamGenre(db *sql.DB, stream_id int, genre_ids []int) ([]int, error
 
 	fullQuery := query + strings.Join(placeholders, ", ")
 
-	_, err := db.Exec(fullQuery, args...)
+	_, err := r.db.Exec(fullQuery, args...)
 	if err != nil {
 		return nil, err
 	}
