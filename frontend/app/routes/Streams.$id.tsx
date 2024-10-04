@@ -24,7 +24,12 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 			},
 		);
 
-		const genres = await Promise.all(genrePromises);
+		const genres = await Promise.all(genrePromises)
+			.then((genres) => genres)
+			.catch((error: Error) => {
+				console.error("Failed to fetch genres:", error);
+				return [];
+			});
 
 		return { streamData, genres };
 	} catch (error) {
