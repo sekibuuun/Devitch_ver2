@@ -3,7 +3,7 @@ import type React from "react";
 import type { Hello as HelloType } from "~/types/types";
 
 export const loader = async () => {
-	const hellosResponse = await fetch("http://localhost:8080/hello");
+	const hellosResponse = await fetch("http://backend:8080/hello");
 	const hellos: HelloType[] = await hellosResponse.json();
 
 	return json({ hellos });

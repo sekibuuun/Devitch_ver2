@@ -1,33 +1,47 @@
 services:
-  app:
-    build: .
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
     ports:
-      - "3000:3000"  # Remix
-      - "8080:8080"  # Go
+      - "3000:3000"
     volumes:
-      - .:/app
-      - /app/frontend/node_modules
-    command: /bin/sh -c "cd frontend && bun run dev & cd backend && air"
-    depends_on:
-      mysql:
-        condition: service_healthy
+      - ./frontend:/app
+      - /app/node_modules
     environment:
       - NODE_ENV=development
-      - MYSQL_HOST=${MYSQL_HOST}
-      - MYSQL_ROOT_USER=${MYSQL_ROOT_USER}
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-      - MYSQL_DATABASE=${MYSQL_DATABASE}
+    depends_on:
+      - backend
     networks:
       - app-network
 
-  mysql:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./backend:/app
+    environment:
+      - MYSQL_HOST=db
+      - MYSQL_ROOT_USER=${MYSQL_ROOT_USER}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - app-network
+
+  db:
     image: mysql:8.0
     command:
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_unicode_ci
       - --sql-mode=ONLY_FULL_GROUP_BY,NO_ENGINE_SUBSTITUTION
     environment:
-      TZ: 'Asia/Tokyo'
+      TZ: "Asia/Tokyo"
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
     ports:

@@ -2,20 +2,30 @@ package services
 
 import (
 	"github.com/sekibuuun/Devitch_ver2/backend/models"
-	"github.com/sekibuuun/Devitch_ver2/backend/repositories"
+	"github.com/sekibuuun/Devitch_ver2/backend/services/repositories"
 )
 
-func GetGenreService() ([]models.Genres, error) {
-	db, err := connectDB()
-	if err != nil {
-		return nil, err
-	}
-	defer db.Close()
+type GenreServicer struct {
+	repository repositories.GenreRepository
+}
 
-	genreList, err := repositories.SelectGenreList(db)
+func NewGenreService(r repositories.GenreRepository) *GenreServicer {
+	return &GenreServicer{repository: r}
+}
+
+func (s *GenreServicer) GetGenreService() ([]models.Genre, error) {
+	genreList, err := s.repository.SelectGenreList()
 	if err != nil {
 		return nil, err
 	}
 
 	return genreList, nil
+}
+
+func (s *GenreServicer) GetGenreByIDService(genreID int) (models.Genre, error) {
+	genre, err := s.repository.SelectGenre(genreID)
+	if err != nil {
+		return models.Genre{}, err
+	}
+	return genre, nil
 }
