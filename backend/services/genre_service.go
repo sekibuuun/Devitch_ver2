@@ -2,11 +2,19 @@ package services
 
 import (
 	"github.com/sekibuuun/Devitch_ver2/backend/models"
-	"github.com/sekibuuun/Devitch_ver2/backend/repositories"
+	"github.com/sekibuuun/Devitch_ver2/backend/services/repositories"
 )
 
-func (s *MyAppService) GetGenreService() ([]models.Genre, error) {
-	genreList, err := repositories.SelectGenreList(s.db)
+type GenreServicer struct {
+	repository repositories.GenreRepository
+}
+
+func NewGenreService(r repositories.GenreRepository) *GenreServicer {
+	return &GenreServicer{repository: r}
+}
+
+func (s *GenreServicer) GetGenreService() ([]models.Genre, error) {
+	genreList, err := s.repository.SelectGenreList()
 	if err != nil {
 		return nil, err
 	}
@@ -14,8 +22,8 @@ func (s *MyAppService) GetGenreService() ([]models.Genre, error) {
 	return genreList, nil
 }
 
-func (s *MyAppService) GetGenreByIDService(genreID int) (models.Genre, error) {
-	genre, err := repositories.SelectGenre(s.db, genreID)
+func (s *GenreServicer) GetGenreByIDService(genreID int) (models.Genre, error) {
+	genre, err := s.repository.SelectGenre(genreID)
 	if err != nil {
 		return models.Genre{}, err
 	}
