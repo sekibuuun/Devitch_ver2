@@ -32,9 +32,8 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 			});
 
 		return { streamData, genres };
-	} catch (error) {
-		console.error("Failed to fetch stream:", error);
-		return { streamData: null, genres: [] };
+	} catch {
+		throw new Response("Failed to load stream data", { status: 500 });
 	}
 };
 
