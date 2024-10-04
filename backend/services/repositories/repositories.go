@@ -17,6 +17,6 @@ type StreamRepository interface {
 	SelectStream(int) (models.Stream, error)
 }
 
-type InsertStream interface {
+type StreamGenreRepository interface {
 	InsertStreamGenre(int, []int) ([]int, error)
 }
