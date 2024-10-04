@@ -1,10 +1,24 @@
 package repositories
 
 import (
+	"database/sql"
+
 	"github.com/sekibuuun/Devitch_ver2/backend/models"
 )
 
-func (r *MyAppRepository) InsertStream(stream models.Stream) (models.Stream, error) {
+type StreamRepository struct {
+	db              *sql.DB
+	streamGenreRepo *StreamGenreRepository
+}
+
+func NewStreamRepository(db *sql.DB) *StreamRepository {
+	return &StreamRepository{
+		db:              db,
+		streamGenreRepo: NewStreamGenreRepository(db),
+	}
+}
+
+func (r *StreamRepository) InsertStream(stream models.Stream) (models.Stream, error) {
 	const query = `INSERT INTO Stream (title) VALUES (?)`
 
 	var newStream models.Stream
@@ -17,7 +31,7 @@ func (r *MyAppRepository) InsertStream(stream models.Stream) (models.Stream, err
 
 	stream_id, _ := result.LastInsertId()
 
-	genre_ids, err := InsertStreamGenre(int(stream_id), stream.GenreIds)
+	genre_ids, err := r.streamGenreRepo.InsertStreamGenre(int(stream_id), stream.GenreIds)
 	if err != nil {
 		return models.Stream{}, err
 	}
@@ -28,7 +42,7 @@ func (r *MyAppRepository) InsertStream(stream models.Stream) (models.Stream, err
 	return newStream, nil
 }
 
-func (r *MyAppRepository) SelectStream(streamID int) (models.Stream, error) {
+func (r *StreamRepository) SelectStream(streamID int) (models.Stream, error) {
 	const query = `SELECT s.stream_id, s.title, sg.genre_id FROM Stream s JOIN StreamGenre sg ON s.stream_id = sg.stream_id WHERE s.stream_id = ?;`
 
 	row, err := r.db.Query(query, streamID)

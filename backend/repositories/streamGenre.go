@@ -1,10 +1,19 @@
 package repositories
 
 import (
+	"database/sql"
 	"strings"
 )
 
-func (r *MyAppRepository) InsertStreamGenre(stream_id int, genre_ids []int) ([]int, error) {
+type StreamGenreRepository struct {
+	db *sql.DB
+}
+
+func NewStreamGenreRepository(db *sql.DB) *StreamGenreRepository {
+	return &StreamGenreRepository{db: db}
+}
+
+func (r *StreamGenreRepository) InsertStreamGenre(stream_id int, genre_ids []int) ([]int, error) {
 	const query = `INSERT INTO StreamGenre (stream_id, genre_id) VALUES `
 
 	placeholders := make([]string, len(genre_ids))
