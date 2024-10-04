@@ -7,14 +7,22 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/sekibuuun/Devitch_ver2/backend/api/middlewares"
 	"github.com/sekibuuun/Devitch_ver2/backend/controllers"
+	"github.com/sekibuuun/Devitch_ver2/backend/repositories"
 	"github.com/sekibuuun/Devitch_ver2/backend/services"
 )
 
 func NewRouter(db *sql.DB) *mux.Router {
-	ser := services.NewMyAppService(db)
-	gCon := controllers.NewGenreController(ser)
-	sCon := controllers.NewStreamController(ser)
-	hCon := controllers.NewHealthCheckController(ser)
+	hRep := repositories.NewHealthCheckRepository(db)
+	gRep := repositories.NewGenreRepository(db)
+	sRep := repositories.NewStreamRepository(db)
+
+	hSer := services.NewHealthCheckService(hRep)
+	gSer := services.NewGenreService(gRep)
+	sSer := services.NewStreamService(sRep)
+
+	hCon := controllers.NewHealthCheckController(hSer)
+	gCon := controllers.NewGenreController(gSer)
+	sCon := controllers.NewStreamController(sSer)
 
 	r := mux.NewRouter()
 	r.HandleFunc("/hello", hCon.HelloHandler).Methods(http.MethodGet)
